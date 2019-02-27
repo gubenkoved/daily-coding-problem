@@ -33,15 +33,18 @@ void Main()
 	//	l.Dump();
 
 	RunningMedian(new[] { 2, 1, 5, 7, 2, 0, 5 });
+	
+	// time/space constraints are not specified in the question
+	// but the better approach could be to use min/max heaps
 }
 
-// O(n * logn)
+// O(n) for each step...
 void RunningMedian(IEnumerable<int> numbers)
 {
 	// simplest method -- just maintain sorted array
 	// use binary search to find a place for new element
 	
-	// time for n elements is O(n * logn)
+	// time for n elements is O(n * n)
 	// space complexity is O(n)
 
 	List<int> sorted = new List<int>();
@@ -59,7 +62,7 @@ void RunningMedian(IEnumerable<int> numbers)
 	}
 }
 
-// O(log n)
+// O(n)
 void BinarySearchInsert(List<int> sorted, int num)
 {
 	if (!sorted.Any())
@@ -80,6 +83,8 @@ void BinarySearchInsert(List<int> sorted, int num)
 		else
 			r = m;
 	}
+	
+	// rats! insertion in list is O(n) :(
 	
 	if (num > sorted[r])
 		sorted.Insert(r + 1, num);
