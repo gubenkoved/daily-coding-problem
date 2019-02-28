@@ -35,16 +35,16 @@ void Main()
 	solver(new[] { 0, 1, 2, 3, 2, 1, 0 }).Dump("0");
 	solver(new[] { 1, 0, 2, 0, 3, 0, 4, 0, 3 }).Dump("9");
 	
-	Verify();
+	Verify(solver);
 }
 
-void Verify()
+void Verify(Func<int[], int> solver)
 {
 	for (int i = 0; i < 1000; i++)
 	{
 		var heights = Generate(100);
 		
-		int solution = Calculate(heights);
+		int solution = solver(heights);
 		int rightSolution = CalculateNaive(heights);
 		
 		if (solution != rightSolution)
@@ -137,4 +137,60 @@ int Calculate(int[] heights)
 	}
 	
 	return water;
+}
+
+int CalcRinat(int[] walls)
+{
+	if (walls.Length < 3)
+		return 0;
+
+	int totalV = 0;
+	int curV = 0;
+	int localMaxH = walls[0];
+	int localMaxIndex = 0;
+
+	for (int i = 1; i < walls.Length; i++)
+	{
+		int curH = walls[i];
+
+		if (curH >= localMaxH)
+		{
+			totalV += curV;
+
+			curV = 0;
+			localMaxH = curH;
+			localMaxIndex = i;
+		}
+		else
+		{
+			if (i == walls.Length - 1)
+			{
+				curV = 0;
+				localMaxH = curH;
+
+				break;
+			}
+
+			curV += localMaxH - curH;
+		}
+	}
+
+	for (int i = walls.Length - 2; i >= localMaxIndex; i--)
+	{
+		int curH = walls[i];
+
+		if (curH >= localMaxH)
+		{
+			totalV += curV;
+
+			curV = 0;
+			localMaxH = curH;
+		}
+		else
+		{
+			curV += localMaxH - curH;
+		}
+	}
+
+	return totalV;
 }
