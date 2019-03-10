@@ -24,7 +24,7 @@ void Main()
 }
 
 // initial sort is O(n logn)
-// query is O(nlogn)
+// query is O(logn)
 IEnumerable<string> Autocomplete(string prefix, IEnumerable<string> all)
 {
 	// https://stackoverflow.com/questions/44675770/character-after-hyphen-affects-string-compare
