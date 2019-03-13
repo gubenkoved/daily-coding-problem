@@ -32,6 +32,9 @@ int MaxSum(int[] a)
 	// maintain max of all running max values
 	// time O(n), space O(1)
 	
+	// it looks like what I ended up with is called "Kadane's algorithm"
+	// https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm
+	
 	int overallMax = 0;
 	int runningMax = 0;
 	
