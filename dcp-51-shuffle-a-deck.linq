@@ -16,6 +16,9 @@ private Random _rnd = new Random();
 
 void Main()
 {
+	// found that alg i've ended up with called 
+	// https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+	
 	//FreqCheck(100000, 52, Shuffle);
 	//FreqCheck(1000000, 10, Shuffle);
 	//FreqCheck(100000, 10, Shuffle);
