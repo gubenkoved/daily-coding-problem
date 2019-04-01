@@ -15,11 +15,61 @@ void Main()
 	// and then calculate the max product as other numbers are not going to matter
 	
 	LargestProductOfThreeItems(new[] { -10, -10, 5, 2 }).Dump();
+	LargestProductOfThreeItems(new[] { -10, 10, 5, 2 }).Dump();
+	
+	for (int i = 0; i < 5; i++)
+	{
+		int[] a = RandomArray(1000);
+		
+		long result = LargestProductOfThreeItemsOptmized(a);
+		long resultToCheck = LargestProductOfThreeItems(a);
+
+		if (result != resultToCheck)
+		{
+			a.Dump();
+			
+			result.Dump("result");
+			resultToCheck.Dump("result to check");
+			
+			throw new Exception("WA!");
+		}
+	}
+	
+	"Verified!".Dump();
 }
 
+public int[] RandomArray(int n)
+{
+	Random rnd = new Random(Guid.NewGuid().GetHashCode());
+	
+	int[] a = new int[n];
+	
+	for (int i = 0; i < n; i++)
+		a[i] = rnd.Next() % 1000000 - 500000;
+	
+	return a;
+}
+
+// O(n logn)
+public long LargestProductOfThreeItemsOptmized(int[] a)
+{
+	// three maximal positive values and two maximal by absolute values
+	// negative values are going to matter ONLY
+	
+	if (a.Length <= 5)
+		return LargestProductOfThreeItems(a);
+	
+	int[] sorted = a.OrderBy(x => x).ToArray();
+	
+	int n = a.Length;
+
+	return LargestProductOfThreeItems(new[] { sorted[0], sorted[1], sorted[n - 1], sorted[n - 2], sorted[n - 3], });
+}
+
+// O(n^3)
 public long LargestProductOfThreeItems(int[] a)
 {
-	long largestProduct = long.MinValue;
+	long largestProduct = int.MinValue;
 	
 	for (int i = 0; i < a.Length; i++)
 	{
@@ -27,8 +77,8 @@ public long LargestProductOfThreeItems(int[] a)
 		{
 			for (int k = j + 1; k < a.Length; k++)
 			{
-				if (a[i] * a[j] * a[k] > largestProduct)
-					largestProduct = a[i] * a[j] * a[k];
+				if ((long)a[i] * (long)a[j] * (long)a[k] > largestProduct)
+					largestProduct = (long)a[i] * (long)a[j] * (long)a[k];
 			}
 		}
 	}
