@@ -25,7 +25,8 @@ void Main()
 	//var a = Enumerable.Range(0, 1000).ToArray(); // 1000
 	//var a = Enumerable.Range(0, 1000).Select(x => 1000 - x).ToArray(); // 1
 	
-	LongestIncreasingSubsequence(a).Dump();
+	//LongestIncreasingSubsequenceBacktracking(a).Dump();
+	LongestIncreasingSubsequenceDynamicPrograming(a).Dump();
 }
 
 int[] RandomArray(int n)
@@ -40,8 +41,39 @@ int[] RandomArray(int n)
 	return a;
 }
 
+int LongestIncreasingSubsequenceDynamicPrograming(int[] a)
+{
+	// I came up with backtracking not very efficient solution myself
+	// and after reading some articles found out that there is also a DP
+	// solution that works for O(n*n) -- as simple as that...
+	
+	int[] l = new int[a.Length];
+	
+	for (int i = a.Length - 1; i >= 0; i--)
+	{
+		if (i == a.Length - 1)
+		{
+			l[i] = 1; // edge case
+		} else
+		{
+			int best = 1;
+			for (int j = i + 1; j < a.Length; j++)
+			{
+				if (a[j] >= a[i] && l[j] >= best)
+					best = 1 + l[j];
+			}
+			
+			l[i] = best;
+		}
+	}
+	
+	Util.Metatext("DP: " + string.Join(", ", l)).Dump();
+	
+	return l.Max();
+}
+
 // NP...
-int LongestIncreasingSubsequence(int[] a)
+int LongestIncreasingSubsequenceBacktracking(int[] a)
 {
 	Dictionary<int, int[]> candidatesMap = new Dictionary<int, int[]>();
 
@@ -58,13 +90,13 @@ int LongestIncreasingSubsequence(int[] a)
 		candidatesMap[i] = idx.ToArray();
 	}
 	
-	return FindMaxSubsequenceLen(a, candidatesMap, 0, -1);
+	return FindMaxSubsequenceLenBacktracking(a, candidatesMap, 0, -1);
 }
 
 // return amount of items in increasing sequence
 // candidatesMap[i] contains indexes of items which are more than (or equal to) element i
 // and they are located to the right from i
-int FindMaxSubsequenceLen(int[] a, Dictionary<int, int[]> candidatesMap, int startIndex, int thresholdIdx)
+int FindMaxSubsequenceLenBacktracking(int[] a, Dictionary<int, int[]> candidatesMap, int startIndex, int thresholdIdx)
 {
 	if (startIndex >= a.Length)
 		return 0;
@@ -86,7 +118,7 @@ int FindMaxSubsequenceLen(int[] a, Dictionary<int, int[]> candidatesMap, int sta
 			continue; // there is no point looking at these! 
 		
 		// okay, try to add current item to subsequence
-		int sub = 1 + FindMaxSubsequenceLen(a, candidatesMap, candidateIdx + 1, candidateIdx);
+		int sub = 1 + FindMaxSubsequenceLenBacktracking(a, candidatesMap, candidateIdx + 1, candidateIdx);
 
 		currentMinimumTried = a[candidateIdx];
 
