@@ -16,8 +16,8 @@ void Main()
 	// why on earth it's different, does not it mean that conditional probability of 
 	// 6 after 5 is different from probability of 5 after 5?! :'(
 	
-	Expectation(FirstGame).Dump("first");
-	Expectation(SecondGame).Dump("second");
+	Expectation(FirstGame).Dump("first (5, 6)");
+	Expectation(SecondGame).Dump("second (5, 5)");
 
 	// even in simplest cases math. expectation is one hell of a thing to compute!
 	// https://www.wolframalpha.com/input/?i=sum+%28n%2B1%29%285%2F6%29%5En%2C+n%3D0+to+infinity
@@ -76,4 +76,4 @@ int Game(int[] win)
 
 int FirstGame() => Game(new[] { 5, 6 });
 
-int SecondGame() => Game(new[] { 5, 5});
+int SecondGame() => Game(new[] { 5, 5 });
