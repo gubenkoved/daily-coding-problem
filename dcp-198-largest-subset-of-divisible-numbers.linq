@@ -1,0 +1,61 @@
+<Query Kind="Program" />
+
+// This problem was asked by Google.
+// 
+// Given a set of distinct positive integers, find the largest subset
+// such that every pair of elements in the subset (i, j) satisfies
+// either i % j = 0 or j % i = 0.
+// 
+// For example, given the set [3, 5, 10, 20, 21], you should return
+// [5, 10, 20]. Given [1, 3, 6, 24], return [1, 3, 6, 24].
+
+void Main()
+{
+	BiggestSubset(new[] { 3, 5, 10, 20, 21 }).Dump();
+	BiggestSubset(new[] { 3, 5, 10, 20, 21, 63, 63 * 3 }).Dump();
+	
+	BiggestSubset(new[] { 1, 3, 6, 24 }).Dump();
+}
+
+int[] BiggestSubset(int[] a)
+{
+	int[] result = null;
+	
+	F(new HashSet<int>(a), new HashSet<int>(), ref result);
+	
+	return result;
+}
+
+// backtracking search
+
+// worst case: O(2^n) ???
+void F(HashSet<int> pool, HashSet<int> current, ref int[] biggest)
+{
+	if (biggest == null || current.Count > biggest.Length)
+		biggest = current.ToArray();
+	
+	foreach (int a in pool.ToArray())
+	{
+		// compatible? try to add
+		bool compatible = true;
+		
+		foreach (var b in current)
+		{
+			if (a % b != 0 && b % a != 0)
+				compatible = false;
+		}
+		
+		if (compatible)
+		{
+			// try to add it!
+			
+			pool.Remove(a);
+			current.Add(a);
+			
+			F(pool, current, ref biggest);
+			
+			pool.Add(a);
+			current.Remove(a);
+		}
+	}
+}
