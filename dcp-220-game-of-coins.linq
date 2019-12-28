@@ -34,9 +34,6 @@ int MaxWin(int[] coins)
 // negamax!
 int Estimate(int[] coins)
 {
-	if (!coins.Any())
-		return 0;
-		
 	if (coins.Length == 1)
 		return coins[0];
 	
@@ -54,7 +51,6 @@ int Estimate(int[] coins)
 	int estimate2 = currentTotal - Estimate(coins2);
 
 	return Math.Max(estimate1, estimate2);
-
 }
 
 int[] TakeLeft(int[] coins)
