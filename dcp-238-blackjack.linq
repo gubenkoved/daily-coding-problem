@@ -46,16 +46,38 @@ public class State
 	}
 }
 
-int Score(IEnumerable<int> dealer, IEnumerable<int> player, IEnumerable<int> deck)
+
+public class Estimate
 {
-	return Score(new State(dealer, player, deck));
+	public int Value { get; set; }
+	public IEnumerable<string> Steps { get; set; }
+	
+	public Estimate(int value, params string[] steps)
+	{
+		Value = value;
+		Steps = steps?.ToList();
+	}
+	
+	public Estimate AddStep(string step)
+	{
+		return new Estimate(Value, Steps.Append(step).ToArray());
+	}
 }
 
-int Score(State state)
+int Score(IEnumerable<int> dealer, IEnumerable<int> player, IEnumerable<int> deck)
+{
+	var estmate = Score(new State(dealer, player, deck));
+	
+	estmate.Steps.Reverse().Dump();
+	
+	return estmate.Value;
+}
+
+Estimate Score(State state)
 {
 	// base case
 	if (state.Deck.Count == 0)
-		return HandScore(state.Player, against: state.Dealer);
+		return new Estimate(value: HandScore(state.Player, against: state.Dealer), "deck is over");
 		
 	// okay, there are some cards there, player can either get one, or skip
 	
@@ -67,7 +89,7 @@ int Score(State state)
 		
 	int currentRoundSkipScore = HandScore(skipBranch.Player, skipBranch.Dealer);
 
-	int skipScore;
+	Estimate skipEstimate;
 
 	// new round for the skip branch
 	if (skipBranch.Deck.Count >= 4)
@@ -82,10 +104,13 @@ int Score(State state)
 		skipBranch.Player.Add(skipBranch.Deck.Pop());
 		
 		// go deeper!
-		skipScore = currentRoundSkipScore + Score(skipBranch);
+		skipEstimate = Score(skipBranch);
+
+		// add current round
+		skipEstimate.Value += currentRoundSkipScore;
 	} else
 	{
-		skipScore = currentRoundSkipScore;
+		skipEstimate = new Estimate(currentRoundSkipScore, "game over");
 	}
 
 	State hitBranch = state.Clone();
@@ -93,9 +118,12 @@ int Score(State state)
 	// take a card!
 	hitBranch.Player.Add(hitBranch.Deck.Pop());
 
-	int hitScore = Score(hitBranch);
+	Estimate hitEstimate = Score(hitBranch);
 	
-	return Math.Max(skipScore, hitScore);
+	if (hitEstimate.Value > skipEstimate.Value)
+		return hitEstimate.AddStep("hit");
+	else
+		return skipEstimate.AddStep("skip");
 }
 
 int HandScore(IEnumerable<int> hand, IEnumerable<int> against)
