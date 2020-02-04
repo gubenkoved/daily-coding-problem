@@ -8,6 +8,8 @@
 
 void Main()
 {
+	// https://leetcode.com/problems/balanced-binary-tree/
+	
 	var r = new Node("a",
 		new Node("b"),
 		new Node("c",
@@ -23,7 +25,14 @@ void Main()
 				
 	IsBalanced(r2).Dump("false");
 	
-	IsBalanced(new Node("a", new Node("b"))).Dump("trues");
+	IsBalanced(new Node("a", new Node("b"))).Dump("true");
+	
+	IsBalanced(
+		new Node("a",
+			null,
+			new Node("b",
+				null,
+				new Node("c")))).Dump("false");
 }
 
 public bool IsBalanced(Node root)
@@ -61,7 +70,7 @@ public bool IsBalancedRecoursive(Node root, Dictionary<Node, int> heightMap)
 
 public int HeightCalculator(Node cur, Dictionary<Node, int> heightMap)
 {
-	int height = 0;
+	int height = 1;
 	
 	if (cur.Left != null)
 		height = 1 + HeightCalculator(cur.Left, heightMap);
