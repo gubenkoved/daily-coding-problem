@@ -1,2 +1,5 @@
 .vscode
 __pycache__
+python/.idea/*
+python/dcp.code-workspace
+python/test.py
