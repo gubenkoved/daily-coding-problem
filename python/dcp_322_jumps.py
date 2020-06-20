@@ -54,9 +54,37 @@ def count_jumps(n: int, max_depth: Optional[int] = None) -> int:
 
     return min_distance[n]
 
+# i'm not entiely shure WHY it works, but i made an observation that:
+# if target is withing set reachable by the series compsoed by sum of arithmetic progression
+# it's the faster way to reach such number -- that's quite obvious -- we go the fastest possible way
+# to target number as we always step to the side where we add a number and never sutract anything, e.g.:
+# 1 -> 1  --> f(1) = 1
+# 1 + 2 -> 3  --> f(3) = 2
+# 1 + 2 + 3 -> 6  --> f(6) = 3
+# 1 + 2 + 3 + 4 -> 10  --> f(10) = 4
+# secondly, drawin a tree it becomes obvious that if n is reachable in k steps (f(n) = k) then other numbers
+# which are n - 2, n - 4, n - 6, ..., n - q (where q is a natural number) are also reachable
+# and something makes me feel that it might produce an optimal path to a given number and i'm not entierly sure
+# why exactly it is the case though, but IT WORKS!
+def count_jumps2(n: int):
+    n = abs(n)
+    k = 0
+    sum = 0
 
-# print(count_jumps(1000000000))
+    while True:
+        k += 1
+        sum += k
+
+        if sum == n:
+            return k
+
+        if n < sum and (sum - n) % 2 == 0:
+            return k
+
+
+# print(count_jumps2(1000000000))
 
 
 for i in range(1, 1000):
-    print(f'f({i:2}) = {count_jumps(i, 1_000)}')
+    #print(f'f({i:2}) = {count_jumps2(i)} ({count_jumps(i)})')
+    print(f'f({i:2}) = {count_jumps2(i)}')
