@@ -4,3 +4,4 @@ python/.idea/*
 python/dcp.code-workspace
 python/test.py
 Python/*.pyc
+python/venv/*
